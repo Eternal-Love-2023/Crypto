@@ -1,0 +1,27 @@
+import libnum
+def create(plaintext,key):
+    S =list(range(256))##用0~255填充 
+    T=[0]*256## 全零的临时数组 
+    K=[ord(c) for c in key]
+    for i in range(256):
+        T[i]=K[i % len(key)]
+    j=0
+    for i in range(256):
+        j=(j+S[i]+T[i]) % 256
+        S[i],S[j]=S[j],S[i]
+    i=j=0
+    cipher=[]
+    for char in plaintext:
+        p=ord(char) ##将获得的明文字符转换为ASCII码
+        i=(i+1)%256
+        j=(j+S[i])%256
+        S[i],S[j]=S[j],S[i]
+        t=(S[i]+S[j])%256
+
+        key_byte=S[t]
+        cipher_byte=p ^ key_byte
+        cipher.append(f"{cipher_byte:02x}")
+    return cipher
+print(create('abab','cipherByRC4'))
+print(create('9876','cipherByRC4'))
+print(create('123456789','cipherByRC4'))
